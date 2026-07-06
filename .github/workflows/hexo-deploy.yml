@@ -1,10 +1,8 @@
-name: Hexo Deploy
+name: Hexo 自动部署
 
 on:
   push:
     branches: [ yuanma ]
-  # 允许手动触发
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,18 +11,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # ============================================================
-      # 阶段 1: 拉取源码
-      # ============================================================
       - name: 拉取源码
         uses: actions/checkout@v4
         with:
           ref: yuanma
 
-
-      # ============================================================
-      # 阶段 2: 构建 & 部署 Hexo
-      # ============================================================
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,16 +25,17 @@ jobs:
       - name: 安装依赖
         run: npm install
 
+      - name: 配置Git
+        run: |
+          git config --global user.name "Xuxu0927"
+          git config --global user.email "2889087473@qq.com"
+
       - name: 生成静态文件
         run: |
           npx hexo clean
           npx hexo generate
 
-      - name: 部署到 main 分支
-        run: |
-          # hexo deploy 内部会创建 .deploy_git 仓库，需要 git 身份
-          git config --global user.name "Xuxu0927"
-          git config --global user.email "2889087473@qq.com"
-          npx hexo deploy --repo https://x-access-token:${GITHUB_TOKEN}@github.com/Xuxu0927/Xuxu0927.github.io.git
+      - name: 部署到main分支
+        run: npx hexo deploy --repo https://x-access-token:${GITHUB_TOKEN}@github.com/Xuxu0927/Xuxu0927.github.io.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
