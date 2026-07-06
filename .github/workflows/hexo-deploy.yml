@@ -1,11 +1,8 @@
-name: Hexo 
+name: Hexo Deploy
 
 on:
   push:
     branches: [ yuanma ]
-  schedule:
-    # 每天北京时间 07:00 (UTC 23:00) 自动抓取热门新闻并部署
-    - cron: '0 23 * * *'
   # 允许手动触发
   workflow_dispatch:
 
@@ -26,7 +23,7 @@ jobs:
 
 
       # ============================================================
-      # 阶段 3: 构建 & 部署 Hexo
+      # 阶段 2: 构建 & 部署 Hexo
       # ============================================================
       - name: 设置 Node.js
         uses: actions/setup-node@v4
